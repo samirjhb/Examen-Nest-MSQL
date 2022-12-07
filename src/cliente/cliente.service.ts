@@ -1,7 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import { CreateVentaDTO } from './../productos/dto/create-venta.dto';
 import { Cliente } from './entities/cliente.entity';
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateClienteDto } from './dto/create-cliente.dto';
 import { UpdateClienteDto } from './dto/update-cliente.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -42,7 +41,7 @@ export class ClienteService {
   }
 
   //Funcion para realizar  venta
-  async venta(createVentaDTO: CreateVentaDTO) {
+  async venta(createVentaDTO) {
     const DataCliente = await this.clienteRepository.findOne({
       where: {
         Cliente: createVentaDTO.Cliente,
@@ -54,6 +53,19 @@ export class ClienteService {
         Producto: createVentaDTO.Producto,
       },
     });
-    console.log('Data Cliente', DataCliente, 'Data Producto', DataProducto);
+    if (!DataCliente) {
+      return new HttpException('Dato no encontrado en los clientes', HttpStatus.NOT_FOUND);
+    }else if (!DataProducto) {
+      return new HttpException('Dato no encontrado en los producto', HttpStatus.NOT_FOUND);
+    }
+
+    if(DataCliente.saldo > DataProducto.precioProducto){
+     const newSaldo=  DataCliente.saldo - DataProducto.precioProducto;
+     DataCliente.saldo = newSaldo
+     this.clienteRepository.save(DataCliente);
+    }
+   
+    const NewVenta= this.VentasRepository.create(createVentaDTO);
+    return this.VentasRepository.save(NewVenta); 
   }
 }

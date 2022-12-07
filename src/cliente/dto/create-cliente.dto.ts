@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateClienteDto {
   @ApiProperty()
-  cliente: string;
+  Cliente: string;
   @ApiProperty()
   rut: string;
   @ApiProperty()
