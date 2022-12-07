@@ -1,8 +1,5 @@
-import {
-  Column,
-  Entity,
-  PrimaryGeneratedColumn,
-} from 'typeorm';
+import { Ventas } from 'src/productos/entities/regitroVentas.entity';
+import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Cliente' })
 export class Cliente {
@@ -32,4 +29,6 @@ export class Cliente {
   })
   createdAt: Date;
 
+  @ManyToOne(() => Ventas, (ventas) => ventas.RegistroVentas)
+  compra: Ventas;
 }

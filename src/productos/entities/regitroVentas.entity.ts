@@ -1,5 +1,5 @@
 import { Cliente } from 'src/cliente/entities/cliente.entity';
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 
 @Entity({ name: 'Ventas' })
 export class Ventas {
@@ -9,6 +9,8 @@ export class Ventas {
   Compra: string;
   @Column()
   Producto: string;
+  @OneToMany(() => Cliente, (cliente) => cliente.compra)
+  RegistroVentas: Cliente[];
   @Column({
     type: 'timestamp',
     default: () => {

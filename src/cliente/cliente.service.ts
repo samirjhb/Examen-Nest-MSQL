@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { Cliente } from './entities/cliente.entity';
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
@@ -32,7 +33,7 @@ export class ClienteService {
     return `This action returns a #${id} cliente`;
   }
 
-  update(id: number, updateClienteDto: UpdateClienteDto) {
+  update(id: number, _updateClienteDto: UpdateClienteDto) {
     return `This action updates a #${id} cliente`;
   }
 
@@ -54,18 +55,24 @@ export class ClienteService {
       },
     });
     if (!DataCliente) {
-      return new HttpException('Dato no encontrado en los clientes', HttpStatus.NOT_FOUND);
-    }else if (!DataProducto) {
-      return new HttpException('Dato no encontrado en los producto', HttpStatus.NOT_FOUND);
+      return new HttpException(
+        'Dato no encontrado en los clientes',
+        HttpStatus.NOT_FOUND,
+      );
+    } else if (!DataProducto) {
+      return new HttpException(
+        'Dato no encontrado en los producto',
+        HttpStatus.NOT_FOUND,
+      );
     }
 
-    if(DataCliente.saldo > DataProducto.precioProducto){
-     const newSaldo=  DataCliente.saldo - DataProducto.precioProducto;
-     DataCliente.saldo = newSaldo
-     this.clienteRepository.save(DataCliente);
+    if (DataCliente.saldo > DataProducto.precioProducto) {
+      const newSaldo = DataCliente.saldo - DataProducto.precioProducto;
+      DataCliente.saldo = newSaldo;
+      this.clienteRepository.save(DataCliente);
     }
-   
-    const NewVenta= this.VentasRepository.create(createVentaDTO);
-    return this.VentasRepository.save(NewVenta); 
+
+    const NewVenta = this.VentasRepository.create(createVentaDTO);
+    return this.VentasRepository.save(NewVenta);
   }
 }
